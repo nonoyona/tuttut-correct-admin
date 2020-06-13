@@ -27,7 +27,7 @@ class CreateLogic extends ChangeNotifier {
     exercise = exercise.copyWith.call(
       tasks: exercise.tasks
         ..add(
-          Task(name: "", points: 0, uid: Random().nextInt(pow(2, 20))),
+          Task(name: "", points: 0, uid: Random().nextInt(pow(2, 20)), parts: [""]),
         ),
     );
     notifyListeners();
@@ -50,12 +50,12 @@ class CreateLogic extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addParts(int index, List<String> parts){
+  /* void addParts(int index, List<String> parts){
     var tasks = exercise.tasks;
     tasks[index] = tasks[index].copyWith.call(parts: parts);
     exercise = exercise.copyWith.call(tasks: tasks);
     notifyListeners();
-  }
+  } */
 
   void changeTaskPoints(int index, int points) {
     var tasks = exercise.tasks;

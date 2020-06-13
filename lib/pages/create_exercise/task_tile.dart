@@ -55,13 +55,6 @@ class TaskTile extends StatelessWidget {
                   )
                 ],
               ),
-              SizedBox(
-                height: Style.smallPadding,
-              ),
-              ElevatedInputField(
-                hint: "Task parts e.g. a), b), c)...",
-                onChanged: (value) => logic.addParts(taskId, value.split(" ")),
-              ),
             ],
           ),
         ),

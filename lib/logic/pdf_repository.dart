@@ -49,11 +49,11 @@ class PdfRepository {
     }
   }
 
-  Future<Uint8List> exportSubmissions(List<Submission> submissions) async {
+  /* Future<Uint8List> exportSubmissions(List<Submission> submissions) async {
     var pdfs = await Future.wait(submissions.map((e) => createPdf(e)));
     var zip = zipFiles(pdfs, submissions);
     return zip;
-  }
+  } */
 
   void downloadFile(
     Uint8List bytes,
@@ -76,15 +76,12 @@ class PdfRepository {
     return;
   }
 
-  Uint8List zipFiles(List<Uint8List> files, List<Submission> submissions) {
+  Uint8List zipFiles(List<String> filenames, List<String> data) {
     var archive = a.Archive();
-    for (var i = 0; i < files.length; i++) {
-      var lastnames = submissions[i].studentContributors.map((e) => e.name.split(" ").last).join();
-      var archiveFile = a.ArchiveFile(
-        "Ex_${lastnames}_correction.pdf",
-        files[i].length,
-        files[i],
-      );
+    for (var i = 0; i < filenames.length; i++) {
+      var encodedData = utf8.encode(data[i]);
+      var archiveFile =
+          a.ArchiveFile(filenames[i], encodedData.length, encodedData);
       archive.addFile(archiveFile);
     }
 

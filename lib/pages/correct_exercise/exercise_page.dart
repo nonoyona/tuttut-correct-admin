@@ -12,9 +12,9 @@ import 'package:flutter/material.dart';
 class ExercisePage extends StatelessWidget {
   final Exercise exercise;
   final String exercisePath;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  const ExercisePage(
-      {Key key, @required this.exercise, @required this.exercisePath})
+  ExercisePage({Key key, @required this.exercise, @required this.exercisePath})
       : super(key: key);
 
   @override
@@ -25,6 +25,7 @@ class ExercisePage extends StatelessWidget {
         create: (context) => ExerciseLogic(exercise, exercisePath),
         builder: (context, snapshot) {
           return Scaffold(
+            key: _scaffoldKey,
             body: CenteredConstrainedBox(
               child: CustomScrollView(
                 slivers: <Widget>[
@@ -37,6 +38,24 @@ class ExercisePage extends StatelessWidget {
                       onPressed: () => Navigator.pop(context),
                     ),
                     actions: <Widget>[
+                      LinkButton(
+                        onPressed: () => snapshot.createTemplates(),
+                        label: "TEMPLATES",
+                      ),
+                      LinkButton(
+                        onPressed: () async {
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Text("Uploading..."),
+                            duration: Duration(hours: 2),
+                          ));
+                          var res = await snapshot.importFiles();
+                          _scaffoldKey.currentState.hideCurrentSnackBar();
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Text(
+                                  res ? "Uploaded changes" : "Upload failed")));
+                        },
+                        label: "UPLOAD",
+                      ),
                       LinkButton(
                         onPressed: () => Navigator.pushNamed(
                           context,
