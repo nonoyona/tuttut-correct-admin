@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:correct/logic/auth_service.dart';
 import 'package:correct/utils/router.dart';
 import 'package:correct/utils/style.dart';
@@ -14,6 +15,7 @@ import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  //CloudFunctions.instance.useFunctionsEmulator(origin: "//localhost:5001"); //ONLY USE THIS WHILE TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   runApp(MyApp());
 }
 
