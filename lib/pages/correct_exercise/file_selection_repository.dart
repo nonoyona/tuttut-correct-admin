@@ -36,7 +36,7 @@ class FileSelectionRepository {
         completer.completeError("No file selected");
       });
 
-      reader.readAsText(files[0]);
+      reader.readAsText(element);
     });
   }
 }
@@ -47,5 +47,14 @@ class SelectionSucceded {
   SelectionSucceded({
     @required this.data,
     @required this.filenames,
+  });
+}
+
+class _FilenameData {
+  String data;
+  String filename;
+  _FilenameData({
+    @required this.data,
+    @required this.filename,
   });
 }
