@@ -18,11 +18,24 @@ abstract class Submission implements _$Submission {
   List<Student> get studentContributors => contributors.map((e) {
         return Student.fromIdString(e);
       }).toList();
-}
 
-extension SubmissionExt on Submission {
   int get maximumPoints => tasks.fold(
       0, (previousValue, element) => previousValue + element.maximumPoints);
   double get currentPoints => tasks.fold(
       0, (previousValue, element) => previousValue + element.currentPoints);
+  int get taskCount => tasks.length;
+
+  int getVotingPoints(String studentIdString) {
+    return tasks
+        .where((element) => element.votedBy.contains(studentIdString))
+        .length;
+  }
+
+  int getVotingPointsOverHalf(String studentIdString) {
+    return tasks
+        .where((element) =>
+            element.votedBy.contains(studentIdString) &&
+            (element.currentPoints >= element.maximumPoints / 2.0))
+        .length;
+  }
 }

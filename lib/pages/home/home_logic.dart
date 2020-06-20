@@ -32,6 +32,7 @@ class HomeLogic extends ChangeNotifier {
           .map((e) =>
               _ExerciseWithPath(Exercise.fromJson(e.data), e.reference.path))
           .toList();
+      exercises.sort((a, b) => a.exercise.name.compareTo(b.exercise.name));
       notifyListeners();
     });
   }

@@ -22,6 +22,9 @@ class SelectVotersTab extends StatelessWidget {
             trailing: Text("${e.submission.tasks[taskId].currentPoints}pts"),
             selected: selected,
             onTap: () => logic.togglePrecalculation(taskId, e),
+            onLongPress: () => Navigator.pushNamed(
+                context, "/home/users/profile",
+                arguments: {"student": e.student}),
           ),
         );
       } else {
@@ -32,6 +35,9 @@ class SelectVotersTab extends StatelessWidget {
             trailing: Text("${e.submission.tasks[taskId].currentPoints}pts"),
             selected: selected,
             onTap: () => logic.togglePrecalculation(taskId, e),
+            onLongPress: () => Navigator.pushNamed(
+                context, "/home/users/profile",
+                arguments: {"student": e.student}),
           ),
         );
       }

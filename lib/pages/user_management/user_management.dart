@@ -63,6 +63,8 @@ class UserManagementPage extends StatelessWidget {
           (e) => ListTile(
             title: Text("${e.idString}"),
             subtitle: Text("Code: ${e.id}"),
+            onTap: () => Navigator.of(context)
+                .pushNamed("/home/users/profile", arguments: {"student": e}),
           ),
         )
         .toList();

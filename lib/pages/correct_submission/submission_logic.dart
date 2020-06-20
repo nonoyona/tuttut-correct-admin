@@ -7,6 +7,7 @@ import 'package:correct/logic/student.dart';
 import 'package:correct/logic/submission.dart';
 import 'package:correct/logic/task_note.dart';
 import 'package:correct/logic/task_submission.dart';
+import 'package:correct/pages/correct_submission/contributors_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,12 +17,15 @@ class SubmissionLogic extends ChangeNotifier {
   DocumentReference _reference;
   List<List<TaskNote>> _proposedNotes;
   List<Student> _students;
+  List<Student> _searchedStudents;
+  List<StudentWithSubmissions> _studentsWithSubmissions;
   List<Student> get students => _students;
+  List<Student> get searchedStudents => _searchedStudents ?? _students;
   final String _exercisePath;
   bool saved = false;
-  AuthService _auth;
+  AuthService auth;
 
-  SubmissionLogic(this._exercisePath, this._auth, DocumentSnapshot submission) {
+  SubmissionLogic(this._exercisePath, this.auth, DocumentSnapshot submission) {
     if (submission != null) {
       _reference = submission.reference;
     }
@@ -83,15 +87,83 @@ class SubmissionLogic extends ChangeNotifier {
     }
   }
 
+  void search(String text) {
+    var textParts = text.split(RegExp(r"[,;._$!=/]"));
+    var group = textParts.length > 1 ? textParts[1] : "No Group";
+    var name = textParts[0].trim();
+    List<Student> list = [];
+    list.addAll(students.where((element) =>
+        element.name.toLowerCase().contains(name.toLowerCase()) ||
+        element.groupName.toLowerCase().contains(group.toLowerCase()) ||
+        text.toLowerCase().contains(element.name.toLowerCase()) ||
+        text.toLowerCase().contains(element.groupName.toLowerCase())));
+    list.removeWhere((element) => submission.contributors.any((c) {
+          return c == "${element.name} (${element.groupName})";
+        }));
+
+    _searchedStudents = list;
+    notifyListeners();
+  }
+
   Future<void> _initStudentList() async {
-    var user = await _auth.getUser();
-    _students = (await Firestore.instance
+    var user = await auth.getUser();
+    var list = (await Firestore.instance
             .collection("${user.uid}/students/list")
             .getDocuments())
         .documents
         .map((e) => Student.fromJson(e.data))
         .toList();
-    _students = List.unmodifiable(_students);
+    List<String> studentsWithSubmission = (await Firestore.instance
+            .collection("${_exercisePath}/submissions")
+            .getDocuments())
+        .documents
+        .where((element) =>
+            element.reference.documentID != (_reference?.documentID ?? ""))
+        .map((e) => Submission.fromJson(e.data).contributors)
+        .fold(<String>[],
+            (previousValue, element) => previousValue..addAll(element));
+    list.removeWhere(
+        (element) => studentsWithSubmission.contains(element.idString));
+
+    if (submission.contributors.isNotEmpty) {
+      print("LOADING");
+      if (_studentsWithSubmissions == null) {
+        _studentsWithSubmissions = await Future.wait(list.map((e) async =>
+            StudentWithSubmissions(
+                student: e, submissions: await e.fetchAllSubmissions(auth))));
+      }
+      var studentsWithSubmissions = List<StudentWithSubmissions>.from(_studentsWithSubmissions);
+      studentsWithSubmissions.sort((a, b) {
+        int valueForA = a.submissions.fold(
+            0,
+            (previousValue, element) =>
+                previousValue +
+                element.contributors
+                    .where(
+                        (element) => submission.contributors.contains(element))
+                    .length);
+        int valueForB = b.submissions.fold(
+            0,
+            (previousValue, element) =>
+                previousValue +
+                element.contributors
+                    .where(
+                        (element) => submission.contributors.contains(element))
+                    .length);
+        return -valueForA.compareTo(valueForB);
+      });
+      list = studentsWithSubmissions.map((e) => e.student).toList();
+      print("LOADED");
+    }
+    if (_studentsWithSubmissions == null) {
+      Future.wait(list.map((e) async => StudentWithSubmissions(
+          student: e,
+          submissions: await e.fetchAllSubmissions(auth)))).then((value) {
+        _studentsWithSubmissions = value;
+        _students = List.unmodifiable(list);
+      });
+    }
+    _students = List.unmodifiable(list);
   }
 
   Future<void> _init() async {
@@ -129,22 +201,15 @@ class SubmissionLogic extends ChangeNotifier {
     if (submission == null) return;
     submission.contributors.add("${student.name} (${student.groupName})");
     notifyListeners();
-    var user = await _auth.getUser();
-    var docs = await Firestore.instance
-        .collection("${user.uid}/students/list")
-        .where("name", isEqualTo: student.name)
-        .where("groupName", isEqualTo: student.groupName)
-        .getDocuments();
-    if (docs.documents.length == 0) {
-      await Firestore.instance
-          .collection("${user.uid}/students/list")
-          .add(student.toJson());
-    }
+    await _initStudentList();
+    notifyListeners();
   }
 
-  void removeContributor(int index) {
+  void removeContributor(int index) async {
     if (submission == null) return;
     submission.contributors.removeAt(index);
+    notifyListeners();
+    await _initStudentList();
     notifyListeners();
   }
 
@@ -204,6 +269,10 @@ class SubmissionLogic extends ChangeNotifier {
   bool isVotedBy(int taskId, String contributor) {
     if (submission == null) return false;
     return submission.tasks[taskId].votedBy?.contains(contributor) ?? false;
+  }
+
+  void resetSearch() {
+    _searchedStudents = null;
   }
 }
 

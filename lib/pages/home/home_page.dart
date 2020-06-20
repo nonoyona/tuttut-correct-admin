@@ -60,6 +60,7 @@ class HomePage extends StatelessWidget {
                   ),
                   SliverFillRemaining(
                     child: Wrap(
+                      alignment: WrapAlignment.center,
                       runSpacing: Style.smallPadding,
                       spacing: Style.smallPadding,
                       children: _buildList(context, snapshot),

@@ -28,6 +28,9 @@ class ExerciseLogic extends ChangeNotifier {
       submissions = event.documents
           .map((e) => _SubmissionDocument(Submission.fromJson(e.data), e))
           .toList();
+      submissions.sort((a, b) => (a.submission.contributors..sort())
+          .first
+          .compareTo((b.submission.contributors..sort()).first));
       notifyListeners();
     });
   }
@@ -79,9 +82,8 @@ class ExerciseLogic extends ChangeNotifier {
         .submissions
         .map((e) => "Ex_${e.submission.contributors.join("_")}.md")
         .toList();
-    var taskHeaders = exercise.tasks
-        .map((e) => "## ${e.name}:${e.points}:")
-        .join("\n");
+    var taskHeaders =
+        exercise.tasks.map((e) => "## ${e.name}:${e.points}:").join("\n");
     var template = "## ${exercise.name}\n$taskHeaders";
     var downloader = PdfRepository();
     var fileData =

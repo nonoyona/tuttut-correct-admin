@@ -1,4 +1,5 @@
 import 'package:correct/logic/exercise.dart';
+import 'package:correct/logic/student.dart';
 import 'package:correct/pages/correct_exercise/exercise_logic.dart';
 import 'package:correct/pages/correct_exercise/widget/create_submission_tile.dart';
 import 'package:correct/pages/correct_exercise/widget/submission_tile.dart';
@@ -88,6 +89,7 @@ class ExercisePage extends StatelessWidget {
                   SliverFillRemaining(
                     hasScrollBody: false,
                     child: Wrap(
+                      alignment: WrapAlignment.center,
                       runSpacing: Style.smallPadding,
                       spacing: Style.smallPadding,
                       children: _buildList(context, snapshot),
@@ -111,7 +113,7 @@ class ExercisePage extends StatelessWidget {
     );
     var tiles = snapshot.submissions.map(
       (e) => SubmissionTile(
-        contributorName: e.submission.contributors.join(","),
+        contributorName: e.submission.contributors.map((e) => Student.fromIdString(e)).map((e) => e.name).join("\n"),
         document: e.document,
         exercisePath: snapshot.exercisePath,
       ),

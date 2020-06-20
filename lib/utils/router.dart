@@ -10,6 +10,7 @@ import 'package:correct/pages/select_voters/select_voters_page.dart';
 import 'package:correct/pages/signin/signin_page.dart';
 import 'package:correct/pages/user_management/user_management.dart';
 import 'package:correct/pages/user_management/user_management_logic.dart';
+import 'package:correct/pages/user_profile/user_profile_page.dart';
 import 'package:correct/utils/simple_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,13 @@ class MyRouteFactory {
         return SimpleRoute(
           settings: settings,
           builder: (context) => UserManagementPage(),
+        );
+      case "/home/users/profile":
+        return SimpleRoute(
+          settings: settings,
+          builder: (context) => UserProfilePage(
+            student: data.arguments["student"],
+          ),
         );
       case "/home/users/add":
         return SimpleRoute(

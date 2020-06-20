@@ -1,15 +1,21 @@
 import 'package:correct/logic/student.dart';
+import 'package:correct/logic/submission.dart';
 import 'package:correct/pages/correct_submission/submission_logic.dart';
 import 'package:correct/pages/correct_submission/task_tile.dart';
 import 'package:correct/utils/style.dart';
-import 'package:flappy_search_bar/flappy_search_bar.dart';
-import 'package:flappy_search_bar/search_bar_style.dart';
+import 'package:correct/widgets/elevated_input_field.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-class ContributorsTile extends StatelessWidget {
-  final SearchBarController<Student> _controller = SearchBarController();
+class ContributorsTile extends StatefulWidget {
+
   ContributorsTile({Key key}) : super(key: key);
+
+  @override
+  _ContributorsTileState createState() => _ContributorsTileState();
+}
+
+class _ContributorsTileState extends State<ContributorsTile> {
+  final TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,22 +34,16 @@ class ContributorsTile extends StatelessWidget {
             ),
           ),
           ..._buildContributors(context),
+          ElevatedInputField(
+            controller: _controller,
+            hint: "Search",
+            onChanged: (value) => logic.search(value),
+          ),
           Expanded(
-            child: SearchBar<Student>(
-              searchBarController: _controller,
-              suggestions: _getSuggestions(logic),
-              hintText: "Add a contributor",
-              minimumChars: 1,
-              shrinkWrap: true,
-              emptyWidget: ListTile(
-                title: Text("No Contributor found..."),
-              ),
-              cancellationWidget: Icon(Icons.cancel),
-              searchBarStyle: SearchBarStyle(
-                backgroundColor: Colors.transparent,
-              ),
-              onSearch: (txt) => _onSearch(txt, logic),
-              onItemFound: (a, b) => _onItemFound(a, b, logic),
+            child: ListView(
+              children: _getSuggestions(logic)
+                  .map((e) => _onItemFound(e, logic))
+                  .toList(),
             ),
           ),
         ],
@@ -53,7 +53,7 @@ class ContributorsTile extends StatelessWidget {
 
   List<Student> _getSuggestions(SubmissionLogic logic) {
     var list = <Student>[];
-    list.addAll(logic.students);
+    list.addAll(logic.searchedStudents);
     list.removeWhere(
       (element) => logic.submission.contributors.any(
         (c) {
@@ -77,15 +77,17 @@ class ContributorsTile extends StatelessWidget {
     list.removeWhere((element) => logic.submission.contributors.any((c) {
           return c == "${element.name} (${element.groupName})";
         }));
+
     return list;
   }
 
-  Widget _onItemFound(Student item, int index, SubmissionLogic logic) {
+  Widget _onItemFound(Student item, SubmissionLogic logic) {
     return ListTile(
       title: Text(item.name),
       subtitle: Text("(${item.groupName})"),
       onTap: () {
         _controller.clear();
+        logic.resetSearch();
         logic.addContributor(item);
       },
     );
@@ -119,5 +121,17 @@ class ContributorsTile extends StatelessWidget {
         logic.addContributor(value);
       },
     );
+  }
+}
+
+class StudentWithSubmissions {
+  final Student student;
+  List<Submission> _submissions;
+  List<Submission> get submissions => _submissions;
+  StudentWithSubmissions({
+    @required this.student,
+    @required List<Submission> submissions,
+  }) {
+    this._submissions = List.unmodifiable(submissions);
   }
 }
