@@ -80,9 +80,9 @@ class ExerciseLogic extends ChangeNotifier {
         .map((e) => "Ex_${e.submission.contributors.join("_")}.md")
         .toList();
     var taskHeaders = exercise.tasks
-        .map((e) => "[${e.name}:${e.points}:${e.points}:]")
+        .map((e) => "## ${e.name}:${e.points}:")
         .join("\n");
-    var template = "[${exercise.name}] \n$taskHeaders";
+    var template = "## ${exercise.name}\n$taskHeaders";
     var downloader = PdfRepository();
     var fileData =
         downloader.zipFiles(filenames, List.filled(filenames.length, template));
