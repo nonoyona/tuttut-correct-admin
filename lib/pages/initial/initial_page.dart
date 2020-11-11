@@ -1,5 +1,7 @@
-import 'package:correct/logic/auth_service.dart';
+import 'package:correct/logic/services/auth_service.dart';
+import 'package:correct/pages/group_overview/group_overview_page.dart';
 import 'package:correct/pages/initial/initial_logic.dart';
+import 'package:correct/pages/signin/signin_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,10 +11,14 @@ class InitialPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<InitialLogic>(
-      create: (context) => InitialLogic(AuthService.of(context)),
+      create: (context) => InitialLogic(),
       child: Consumer<InitialLogic>(
         builder: (context, logic, child) {
-          Future.microtask(() => _handleNotifier(context, logic));
+          if (logic.redirect == "/home") {
+            return GroupOverviewPage();
+          } else if (logic.redirect == "/signin") {
+            return SignInPage();
+          }
           return Scaffold(
             body: Center(
               child: Text("redirecting..."),
@@ -23,9 +29,4 @@ class InitialPage extends StatelessWidget {
     );
   }
 
-  void _handleNotifier(BuildContext context, InitialLogic logic) {
-    if (logic.redirect.isNotEmpty) {
-      Navigator.pushReplacementNamed(context, logic.redirect);
-    }
-  }
 }

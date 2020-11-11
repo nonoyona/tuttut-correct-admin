@@ -1,127 +1,84 @@
-import 'dart:html';
-
-import 'package:correct/pages/correct_exercise/exercise_page.dart';
-import 'package:correct/pages/correct_submission/submission_page.dart';
-import 'package:correct/pages/create_exercise/create_exercise_page.dart';
-import 'package:correct/pages/create_user/create_user_page.dart';
-import 'package:correct/pages/home/home_page.dart';
-import 'package:correct/pages/initial/initial_page.dart';
-import 'package:correct/pages/select_voters/select_voters_page.dart';
-import 'package:correct/pages/signin/signin_page.dart';
-import 'package:correct/pages/user_management/user_management.dart';
-import 'package:correct/pages/user_management/user_management_logic.dart';
-import 'package:correct/pages/user_profile/user_profile_page.dart';
 import 'package:correct/utils/simple_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class MyRouteFactory {
-  Route<dynamic> getRoute(RouteSettings settings) {
-    var data = _parseRouteSettings(settings);
-    if (data == null) {
-      return MaterialPageRoute(
-        builder: (context) => Scaffold(
-          body: Center(
-            child: Text("ERROR"),
-          ),
-        ),
-      );
-    }
-    switch (data.path) {
-      case "/redirect":
-      case "/":
-        return SimpleRoute(
-          builder: (_) => InitialPage(),
-          settings: settings,
-        );
-      case "/signin":
-        return SimpleRoute(
-          settings: settings,
-          builder: (context) => SignInPage(),
-        );
-      case "/home":
-        return SimpleRoute(
-          settings: settings,
-          builder: (context) => HomePage(),
-        );
-      case "/home/users":
-        return SimpleRoute(
-          settings: settings,
-          builder: (context) => UserManagementPage(),
-        );
-      case "/home/users/profile":
-        return SimpleRoute(
-          settings: settings,
-          builder: (context) => UserProfilePage(
-            student: data.arguments["student"],
-          ),
-        );
-      case "/home/users/add":
-        return SimpleRoute(
-          settings: settings,
-          builder: (context) => CreateUserPage(),
-        );
-      case "/home/create":
-        return SimpleRoute(
-          settings: settings,
-          builder: (context) => CreateExercisePage(),
-        );
-      case "/home/exercise":
-        return SimpleRoute(
-          settings: settings,
-          builder: (context) => ExercisePage(
-            exercise: data.arguments["exercise"],
-            exercisePath: data.arguments["exercisePath"],
-          ),
-        );
-      case "/home/exercise/submission":
-        return SimpleRoute(
-          settings: settings,
-          builder: (context) => SubmissionPage(
-            exercisePath: data.arguments["exercisePath"],
-            submission: data.arguments["submission"],
-          ),
-        );
-      case "/home/exercise/voters":
-        return SimpleRoute(
-          settings: settings,
-          builder: (context) => SelectVotersPage(
-            exercise: data.arguments["exercise"],
-            submissions: data.arguments["submissions"],
-          ),
-        );
-      default:
-        return SimpleRoute(
-          builder: (_) => InitialPage(),
-          settings: settings,
-        );
-    }
-  }
 
-  _RouteData _parseRouteSettings(RouteSettings settings) {
-    var windowUri = Uri.tryParse(window.location.href);
-    var queryParams = Map<String, dynamic>.from(windowUri.queryParameters);
-    print(windowUri.queryParameters);
-    print(windowUri.toString());
-    if (windowUri.fragment != settings.name) {
-      if (settings.name == '/') {
-        return null;
-      } else {
-        print(windowUri.queryParameters);
-        window.history.replaceState(
-            '', "Sird x KjG", window.location.origin + "/#" + settings.name);
+class PathRouter {
+  final List<RoutePath> paths;
+  final Widget notFoundRoute;
+  PathRouter({
+    @required this.paths,
+    @required this.notFoundRoute,
+  });
+
+  Route onGenerateRoute(RouteSettings settings) {
+    final uri = Uri.parse(settings.name);
+    for (var i = 0; i < paths.length; i++) {
+      if (paths[i].match(uri)) {
+        return SimpleRoute(
+          builder: (context) => paths[i].navigate(uri),
+          settings: settings,
+        );
       }
     }
-    queryParams.addAll((settings.arguments as Map<String, dynamic>) ?? {});
-    return _RouteData(path: settings.name, arguments: queryParams);
+    return SimpleRoute(
+      builder: (context) => notFoundRoute,
+      settings: RouteSettings(
+        name: "/404",
+      ),
+    );
   }
 }
 
-class _RouteData {
+class RoutePath {
   final String path;
-  final Map<String, dynamic> arguments;
-  _RouteData({
+  final Widget Function(PathData data) route;
+
+  RoutePath({
     @required this.path,
-    @required this.arguments,
+    @required this.route,
   });
+
+  bool match(Uri uri) {
+    final pathUri = Uri.parse(path);
+    if (pathUri.pathSegments.length != uri.pathSegments.length) return false;
+    for (var i = 0; i < pathUri.pathSegments.length; i++) {
+      final segment = pathUri.pathSegments[i];
+      if (!segment.startsWith(":")) {
+        if (segment != uri.pathSegments[i]) return false;
+      }
+    }
+    return true;
+  }
+
+  Widget navigate(Uri uri) {
+    if (!match(uri)) throw Exception("Navigation cannot be successful");
+    final data = Map<String, String>();
+    final pathUri = Uri.parse(path);
+    for (var i = 0; i < pathUri.pathSegments.length; i++) {
+      final segment = pathUri.pathSegments[i];
+      if (segment.startsWith(":")) {
+        data.putIfAbsent(segment.substring(1), () => uri.pathSegments[i]);
+      }
+    }
+    return route(PathData(data));
+  }
+}
+
+class PathData {
+  final Map<String, String> _map;
+
+  PathData(this._map);
+
+  bool getBool(String key) {
+    return _map[key] == "true";
+  }
+
+  String getString(String key) {
+    return _map[key];
+  }
+
+  int getInt(String key) {
+    return int.tryParse(_map[key]);
+  }
 }

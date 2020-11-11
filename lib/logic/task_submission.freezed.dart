@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named
+// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
 
 part of 'task_submission.dart';
 
@@ -12,9 +12,11 @@ TaskSubmission _$TaskSubmissionFromJson(Map<String, dynamic> json) {
   return _TaskSubmission.fromJson(json);
 }
 
+/// @nodoc
 class _$TaskSubmissionTearOff {
   const _$TaskSubmissionTearOff();
 
+// ignore: unused_element
   _TaskSubmission call(String name, int maximumPoints, List<TaskNote> notes,
       @nullable List<String> votedBy) {
     return _TaskSubmission(
@@ -24,11 +26,18 @@ class _$TaskSubmissionTearOff {
       votedBy,
     );
   }
+
+// ignore: unused_element
+  TaskSubmission fromJson(Map<String, Object> json) {
+    return TaskSubmission.fromJson(json);
+  }
 }
 
+/// @nodoc
 // ignore: unused_element
 const $TaskSubmission = _$TaskSubmissionTearOff();
 
+/// @nodoc
 mixin _$TaskSubmission {
   String get name;
   int get maximumPoints;
@@ -40,6 +49,7 @@ mixin _$TaskSubmission {
   $TaskSubmissionCopyWith<TaskSubmission> get copyWith;
 }
 
+/// @nodoc
 abstract class $TaskSubmissionCopyWith<$Res> {
   factory $TaskSubmissionCopyWith(
           TaskSubmission value, $Res Function(TaskSubmission) then) =
@@ -51,6 +61,7 @@ abstract class $TaskSubmissionCopyWith<$Res> {
       @nullable List<String> votedBy});
 }
 
+/// @nodoc
 class _$TaskSubmissionCopyWithImpl<$Res>
     implements $TaskSubmissionCopyWith<$Res> {
   _$TaskSubmissionCopyWithImpl(this._value, this._then);
@@ -77,6 +88,7 @@ class _$TaskSubmissionCopyWithImpl<$Res>
   }
 }
 
+/// @nodoc
 abstract class _$TaskSubmissionCopyWith<$Res>
     implements $TaskSubmissionCopyWith<$Res> {
   factory _$TaskSubmissionCopyWith(
@@ -90,6 +102,7 @@ abstract class _$TaskSubmissionCopyWith<$Res>
       @nullable List<String> votedBy});
 }
 
+/// @nodoc
 class __$TaskSubmissionCopyWithImpl<$Res>
     extends _$TaskSubmissionCopyWithImpl<$Res>
     implements _$TaskSubmissionCopyWith<$Res> {
@@ -117,6 +130,8 @@ class __$TaskSubmissionCopyWithImpl<$Res>
 }
 
 @JsonSerializable()
+
+/// @nodoc
 class _$_TaskSubmission extends _TaskSubmission with DiagnosticableTreeMixin {
   const _$_TaskSubmission(
       this.name, this.maximumPoints, this.notes, @nullable this.votedBy)

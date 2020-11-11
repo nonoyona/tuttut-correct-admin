@@ -5,7 +5,7 @@ class ElevatedInputField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final Widget trailing;
-  final void Function(String value) onSumbit;
+  final void Function(String value) onSubmit;
   final void Function(String value) onChanged;
   final String labelText;
   final String hint;
@@ -16,7 +16,7 @@ class ElevatedInputField extends StatelessWidget {
     Key key,
     this.controller,
     this.focusNode,
-    this.onSumbit,
+    this.onSubmit,
     this.labelText,
     this.obscureText,
     this.inputIncorrect = false,
@@ -58,7 +58,7 @@ class ElevatedInputField extends StatelessWidget {
           ),
           textInputAction: TextInputAction.none,
           obscureText: obscureText ?? false,
-          onSubmitted: onSumbit,
+          onSubmitted: onSubmit,
           onChanged: this.onChanged,
         ),
       ],
@@ -70,24 +70,28 @@ class ElevatedMultilineInputField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final Widget trailing;
-  final void Function(String value) onSumbit;
+  final void Function(String value) onSubmit;
   final void Function(String value) onChanged;
   final String labelText;
   final String hint;
   final bool obscureText;
   final bool inputIncorrect;
+  final int minLines;
+  final int maxLines;
 
   const ElevatedMultilineInputField({
     Key key,
     this.controller,
     this.focusNode,
-    this.onSumbit,
+    this.onSubmit,
     this.labelText,
     this.obscureText,
     this.inputIncorrect = false,
     this.onChanged,
     this.trailing,
     this.hint,
+    this.minLines = 1,
+    this.maxLines = 3,
   }) : super(key: key);
 
   @override
@@ -110,8 +114,8 @@ class ElevatedMultilineInputField extends StatelessWidget {
           controller: controller,
           focusNode: focusNode,
           style: Style.body,
-          minLines: 1,
-          maxLines: 5,
+          minLines: minLines,
+          maxLines: maxLines,
           decoration: InputDecoration(
             hintText: hint,
             suffixIcon: trailing,
@@ -125,11 +129,10 @@ class ElevatedMultilineInputField extends StatelessWidget {
           ),
           textInputAction: TextInputAction.none,
           obscureText: obscureText ?? false,
-          onSubmitted: onSumbit,
+          onSubmitted: onSubmit,
           onChanged: this.onChanged,
         ),
       ],
     );
   }
 }
-

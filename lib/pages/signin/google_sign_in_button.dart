@@ -1,4 +1,4 @@
-import 'package:correct/logic/auth_service.dart';
+import 'package:correct/logic/services/auth_service.dart';
 import 'package:correct/utils/style.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +16,7 @@ class GoogleSignInButton extends StatelessWidget {
       //highlightColor: Colors.white,
       hoverColor: Colors.white,
       onPressed: () async {
-        var user = await AuthService.of(context).handleSignIn();
+        var user = await AuthService.instance.handleSignIn();
         if (user != null) {
           Navigator.pushReplacementNamed(context, "/home");
         }

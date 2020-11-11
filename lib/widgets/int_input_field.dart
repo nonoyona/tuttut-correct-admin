@@ -6,7 +6,7 @@ class DoubleInputField extends StatefulWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final Widget trailing;
-  final void Function(double value) onSumbit;
+  final void Function(double value) onSubmit;
   final void Function(double value) onChanged;
   final String labelText;
   final String hint;
@@ -17,7 +17,7 @@ class DoubleInputField extends StatefulWidget {
       {Key key,
       this.focusNode,
       this.trailing,
-      this.onSumbit,
+      this.onSubmit,
       this.onChanged,
       this.labelText,
       this.hint,
@@ -39,7 +39,7 @@ class _DoubleInputFieldState extends State<DoubleInputField> {
       controller: widget.controller,
       focusNode: widget.focusNode,
       trailing: widget.trailing,
-      onSumbit: _onSubmit,
+      onSubmit: _onSubmit,
       onChanged: _onChanged,
       hint: widget.hint,
       inputIncorrect: inputIncorrect || (widget.inputIncorrect ?? false),
@@ -58,7 +58,7 @@ class _DoubleInputFieldState extends State<DoubleInputField> {
       setState(() {
         inputIncorrect = false;
       });
-      widget.onSumbit?.call(output < 0 ? -output : output);
+      widget.onSubmit?.call(output < 0 ? -output : output);
     }
   }
 

@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named
+// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
 
 part of 'task.dart';
 
@@ -12,9 +12,11 @@ Task _$TaskFromJson(Map<String, dynamic> json) {
   return _Task.fromJson(json);
 }
 
+/// @nodoc
 class _$TaskTearOff {
   const _$TaskTearOff();
 
+// ignore: unused_element
   _Task call(
       {@required String name,
       @required int points,
@@ -27,11 +29,18 @@ class _$TaskTearOff {
       parts: parts,
     );
   }
+
+// ignore: unused_element
+  Task fromJson(Map<String, Object> json) {
+    return Task.fromJson(json);
+  }
 }
 
+/// @nodoc
 // ignore: unused_element
 const $Task = _$TaskTearOff();
 
+/// @nodoc
 mixin _$Task {
   String get name;
   int get points;
@@ -42,12 +51,14 @@ mixin _$Task {
   $TaskCopyWith<Task> get copyWith;
 }
 
+/// @nodoc
 abstract class $TaskCopyWith<$Res> {
   factory $TaskCopyWith(Task value, $Res Function(Task) then) =
       _$TaskCopyWithImpl<$Res>;
   $Res call({String name, int points, int uid, List<String> parts});
 }
 
+/// @nodoc
 class _$TaskCopyWithImpl<$Res> implements $TaskCopyWith<$Res> {
   _$TaskCopyWithImpl(this._value, this._then);
 
@@ -71,6 +82,7 @@ class _$TaskCopyWithImpl<$Res> implements $TaskCopyWith<$Res> {
   }
 }
 
+/// @nodoc
 abstract class _$TaskCopyWith<$Res> implements $TaskCopyWith<$Res> {
   factory _$TaskCopyWith(_Task value, $Res Function(_Task) then) =
       __$TaskCopyWithImpl<$Res>;
@@ -78,6 +90,7 @@ abstract class _$TaskCopyWith<$Res> implements $TaskCopyWith<$Res> {
   $Res call({String name, int points, int uid, List<String> parts});
 }
 
+/// @nodoc
 class __$TaskCopyWithImpl<$Res> extends _$TaskCopyWithImpl<$Res>
     implements _$TaskCopyWith<$Res> {
   __$TaskCopyWithImpl(_Task _value, $Res Function(_Task) _then)
@@ -103,6 +116,8 @@ class __$TaskCopyWithImpl<$Res> extends _$TaskCopyWithImpl<$Res>
 }
 
 @JsonSerializable()
+
+/// @nodoc
 class _$_Task extends _Task with DiagnosticableTreeMixin {
   const _$_Task(
       {@required this.name,

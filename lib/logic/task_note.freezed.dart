@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named
+// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
 
 part of 'task_note.dart';
 
@@ -12,9 +12,11 @@ TaskNote _$TaskNoteFromJson(Map<String, dynamic> json) {
   return _TaskNote.fromJson(json);
 }
 
+/// @nodoc
 class _$TaskNoteTearOff {
   const _$TaskNoteTearOff();
 
+// ignore: unused_element
   _TaskNote call(
       String comment, double penalty, int uid, @nullable String part) {
     return _TaskNote(
@@ -24,11 +26,18 @@ class _$TaskNoteTearOff {
       part,
     );
   }
+
+// ignore: unused_element
+  TaskNote fromJson(Map<String, Object> json) {
+    return TaskNote.fromJson(json);
+  }
 }
 
+/// @nodoc
 // ignore: unused_element
 const $TaskNote = _$TaskNoteTearOff();
 
+/// @nodoc
 mixin _$TaskNote {
   String get comment;
   double get penalty;
@@ -40,12 +49,14 @@ mixin _$TaskNote {
   $TaskNoteCopyWith<TaskNote> get copyWith;
 }
 
+/// @nodoc
 abstract class $TaskNoteCopyWith<$Res> {
   factory $TaskNoteCopyWith(TaskNote value, $Res Function(TaskNote) then) =
       _$TaskNoteCopyWithImpl<$Res>;
   $Res call({String comment, double penalty, int uid, @nullable String part});
 }
 
+/// @nodoc
 class _$TaskNoteCopyWithImpl<$Res> implements $TaskNoteCopyWith<$Res> {
   _$TaskNoteCopyWithImpl(this._value, this._then);
 
@@ -69,6 +80,7 @@ class _$TaskNoteCopyWithImpl<$Res> implements $TaskNoteCopyWith<$Res> {
   }
 }
 
+/// @nodoc
 abstract class _$TaskNoteCopyWith<$Res> implements $TaskNoteCopyWith<$Res> {
   factory _$TaskNoteCopyWith(_TaskNote value, $Res Function(_TaskNote) then) =
       __$TaskNoteCopyWithImpl<$Res>;
@@ -76,6 +88,7 @@ abstract class _$TaskNoteCopyWith<$Res> implements $TaskNoteCopyWith<$Res> {
   $Res call({String comment, double penalty, int uid, @nullable String part});
 }
 
+/// @nodoc
 class __$TaskNoteCopyWithImpl<$Res> extends _$TaskNoteCopyWithImpl<$Res>
     implements _$TaskNoteCopyWith<$Res> {
   __$TaskNoteCopyWithImpl(_TaskNote _value, $Res Function(_TaskNote) _then)
@@ -101,6 +114,8 @@ class __$TaskNoteCopyWithImpl<$Res> extends _$TaskNoteCopyWithImpl<$Res>
 }
 
 @JsonSerializable()
+
+/// @nodoc
 class _$_TaskNote extends _TaskNote with DiagnosticableTreeMixin {
   const _$_TaskNote(this.comment, this.penalty, this.uid, @nullable this.part)
       : assert(comment != null),
